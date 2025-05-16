@@ -18,7 +18,7 @@
       overflow-y: auto;
     }
 
-    canvas {
+    #tsparticles {
       position: fixed;
       top: 0;
       left: 0;
@@ -145,13 +145,13 @@
 </head>
 
 <body>
-  <canvas id="myCanvas"></canvas>
+  <!-- tsParticles 배경 -->
+  <div id="tsparticles"></div>
 
+  <!-- 내비게이션 -->
   <div class="navbar">
     <div class="logo">
-      <a href="#">
-        <img src="navbar_logo.png" alt="s0sCoD3 Logo" />
-      </a>
+      <a href="#"><img src="navbar_logo.png" alt="s0sCoD3 Logo" /></a>
     </div>
     <div class="menu">
       <a href="#home">Home</a>
@@ -160,6 +160,7 @@
     </div>
   </div>
 
+  <!-- Home 섹션 -->
   <section id="home">
     <div class="content-wrapper">
       <img src="logo.png" alt="Main Logo" />
@@ -174,6 +175,7 @@
     </div>
   </section>
 
+  <!-- About 섹션 -->
   <section id="about">
     <h2>About</h2>
     <p>
@@ -182,6 +184,7 @@
     </p>
   </section>
 
+  <!-- Contact 섹션 -->
   <section id="contact">
     <h2>Contact</h2>
     <p>
@@ -189,81 +192,7 @@
     </p>
   </section>
 
-  <script>
-    const canvas = document.getElementById("myCanvas");
-    const ctx = canvas.getContext("2d");
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    const getRandomInRange = (min, max) => Math.random() * (max - min) + min;
-
-    const TOTAL_POINTS = 20;
-    const CONNECT_DISTANCE = 100;
-    let points = [];
-
-    const drawPoint = point => {
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI);
-      ctx.fillStyle = "#ffffff";
-      ctx.fill();
-    };
-
-    const movePoint = point => {
-      point.x += point.s * Math.cos(point.a);
-      point.y += point.s * Math.sin(point.a);
-    };
-
-    const distance = (p1, p2) => Math.hypot(p2.x - p1.x, p2.y - p1.y);
-
-    const drawLine = (p1, p2, d) => {
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.strokeStyle = `rgba(255,255,255,${1 - d / CONNECT_DISTANCE})`;
-      ctx.stroke();
-    };
-
-    const loop = () => {
-      requestAnimationFrame(loop);
-
-      while (points.length < TOTAL_POINTS) {
-        points.push({
-          x: getRandomInRange(0, canvas.width),
-          y: getRandomInRange(0, canvas.height),
-          a: getRandomInRange(0, 2 * Math.PI),
-          s: 1
-        });
-      }
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      points.forEach(movePoint);
-
-      points = points.filter(p =>
-        p.x >= 0 && p.x <= canvas.width &&
-        p.y >= 0 && p.y <= canvas.height
-      );
-
-      points.forEach(drawPoint);
-
-      for (let i = 0; i < points.length; i++) {
-        for (let j = i + 1; j < points.length; j++) {
-          const d = distance(points[i], points[j]);
-          if (d < CONNECT_DISTANCE) {
-            drawLine(points[i], points[j], d);
-          }
-        }
-      }
-    };
-
-    loop();
-  </script>
-
+  <!-- Typed.js -->
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   <script>
     new Typed('.typed', {
@@ -275,6 +204,54 @@
     });
   </script>
 
+  <!-- tsParticles CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+
+  <!-- tsParticles 설정 -->
+  <script>
+    tsParticles.load("tsparticles", {
+      background: {
+        color: "#000"
+      },
+      particles: {
+        number: {
+          value: 50
+        },
+        color: {
+          value: ["#00f0ff", "#ff00ff"]
+        },
+        shape: {
+          type: ["circle", "triangle"]
+        },
+        opacity: {
+          value: 0.5
+        },
+        size: {
+          value: 3
+        },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "none",
+          outModes: {
+            default: "bounce"
+          }
+        },
+        links: {
+          enable: true,
+          distance: 150,
+          color: "#ffffff",
+          opacity: 0.3,
+          width: 1
+        }
+      },
+      fullScreen: {
+        enable: false
+      }
+    });
+  </script>
+
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="row">
