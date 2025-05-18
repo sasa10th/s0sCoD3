@@ -1,156 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>s0sCoD3</title>
-    <!-- 웹사이트 아이콘 -->
-    <link rel="icon" type="image/png" href="favicon.png">
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000000;
-            font-family: sans-serif;
-            scroll-behavior: smooth;
-            overflow-y: auto;
-        }
-
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            box-sizing: border-box;
-            z-index: 10;
-        }
-
-        .navbar .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar .logo img {
-            height: 40px;
-        }
-
-        .navbar .menu a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 16px;
-        }
-
-        .navbar .menu a:hover {
-            text-decoration: underline;
-        }
-
-        section {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(0, 0, 0, 0.85);
-            color: white;
-            padding: 100px 20px;
-            box-sizing: border-box;
-            z-index: 1;
-            position: relative;
-        }
-
-        .content-wrapper {
-            text-align: center;
-            z-index: 1;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .content-wrapper img {
-            max-width: 100%;
-            height: auto;
-            padding: 20px;
-        }
-
-        .content-wrapper p {
-            margin: 0;
-        }
-
-        section h2 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #00f0ff;
-            padding-bottom: 10px;
-            text-align: center;
-            color: #00f0ff;
-        }
-
-        section p {
-            font-size: 18px;
-            line-height: 1.6;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 10px;
-            color: #ddd;
-        }
-
-        footer {
-            background-color: #111;
-            color: #bbb;
-            text-align: center;
-            padding: 30px 10px;
-            font-size: 14px;
-        }
-
-        footer a {
-            color: #00f0ff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        footer .credits {
-            margin-top: 8px;
-            font-size: 13px;
-            color: #888;
-        }
-
-    </style>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
     <canvas id="myCanvas"></canvas>
 
     <!-- 내비게이션 바 -->
     <div class="navbar">
         <div class="logo">
-            <a href="#">
-                <img src="navbar_logo.png" alt="s0sCoD3 Logo">
-            </a>
+            <a href="#"><img src="img/navbar_logo.png" alt="s0sCoD3 Logo"></a>
         </div>
         <div class="menu">
             <a href="#home">Home</a>
@@ -162,7 +24,7 @@
     <!-- 섹션: Home -->
     <section id="home">
         <div class="content-wrapper">
-            <img src="logo.png" alt="Main Logo">
+            <img src="img/logo.png" alt="Main Logo">
             <h3>
                 <b>
                     <p style="color:white;font-size:40px;">
@@ -191,113 +53,19 @@
         </p>
     </section>
 
-    <!-- 배경 애니메이션 -->
-    <script>
-        const canvas = document.getElementById("myCanvas");
-        const ctx = canvas.getContext("2d");
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        const getRandomInRange = (min, max) => Math.random() * (max - min) + min;
-
-        const TOTAL_POINTS = 20;
-        const CONNECT_DISTANCE = 100;
-        let points = [];
-
-        const drawPoint = point => {
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, 1, 0, 2 * Math.PI);
-            ctx.fillStyle = "#ffffff";
-            ctx.fill();
-        };
-
-        const movePoint = point => {
-            point.x += point.s * Math.cos(point.a);
-            point.y += point.s * Math.sin(point.a);
-        };
-
-        const distance = (p1, p2) => Math.hypot(p2.x - p1.x, p2.y - p1.y);
-
-        const drawLine = (p1, p2, d) => {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(255,255,255,${1 - d / CONNECT_DISTANCE})`;
-            ctx.stroke();
-        };
-
-        const loop = () => {
-            requestAnimationFrame(loop);
-
-            while (points.length < TOTAL_POINTS) {
-                points.push({
-                    x: getRandomInRange(0, canvas.width),
-                    y: getRandomInRange(0, canvas.height),
-                    a: getRandomInRange(0, 2 * Math.PI),
-                    s: 1
-                });
-            }
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            points.forEach(movePoint);
-
-            points = points.filter(p =>
-                p.x >= 0 && p.x <= canvas.width &&
-                p.y >= 0 && p.y <= canvas.height
-            );
-
-            points.forEach(drawPoint);
-
-            points.forEach(p1 => {
-                points.forEach(p2 => {
-                    if (p1 !== p2) {
-                        const d = distance(p1, p2);
-                        if (d < CONNECT_DISTANCE) {
-                            drawLine(p1, p2, d);
-                        }
-                    }
-                });
-            });
-        };
-
-        loop();
-    </script>
-    <!-- Typed.js -->
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    <script>
-        new Typed('.typed', {
-            strings: document.querySelector('.typed').getAttribute('data-typed-items').split(','),
-            typeSpeed: 80,
-            backSpeed: 40,
-            backDelay: 1500,
-            loop: true
-        });
-    </script>
+    <!-- 푸터 -->
     <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="copyright-box">
+        <div class="container">
             <p class="copyright">&copy; Copyright <strong>s0sCoD3</strong>. All Rights Reserved</p>
             <div class="credits">
-              <!--
-              All the links in the footer should remain intact.
-              You can delete the links only if you purchased the pro version.
-              Licensing information: https://bootstrapmade.com/license/
-              Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=DevFolio
-            -->
-              Designed by
-              <a href="https://www.instagram.com/jhk2m08/"> SASA 10th Jihwan Kim</a>
+                Designed by <a href="https://www.instagram.com/jhk2m08/"> SASA 10th Jihwan Kim</a>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-    </footer><!-- End  Footer -->
+    </footer>
+
+    <!-- 스크립트 -->
+    <script src="js/background.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="js/typed-init.js"></script>
 </body>
 </html>
